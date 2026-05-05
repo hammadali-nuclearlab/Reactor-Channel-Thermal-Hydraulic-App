@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reactor Channel App</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="steam-table.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <aside class="control-panel">
+      <div class="brand-block">
+        <p class="eyebrow">Thermal-Hydraulic Solver</p>
+        <h1>Reactor Channel App</h1>
+        <p class="subtitle">
+          Sweep inlet pressure, inlet temperature, and outlet pressure target to see node-by-node reactor results and quick plots.
+        </p>
+      </div>
+
+      <form id="controls" class="control-form">
+        <label>
+          <span>Inlet Pressure P1 (MPa)</span>
+          <input id="inletPressure" name="inletPressure" type="number" step="0.001" value="16.0" required>
+        </label>
+
+        <label>
+          <span>Inlet Temperature T1 (K)</span>
+          <input id="inletTemperature" name="inletTemperature" type="number" step="0.01" value="564.15" required>
+        </label>
+
+        <label>
+          <span>Outlet Pressure Target (MPa)</span>
+          <input id="outletPressure" name="outletPressure" type="number" step="0.001" value="15.7" required>
+        </label>
+
+        <label class="toggle">
+          <input id="autoMatchOutlet" name="autoMatchOutlet" type="checkbox" checked>
+          <span>Auto-adjust inlet pressure to match outlet target</span>
+        </label>
+
+        <p id="modeHint" class="mode-hint">
+          When enabled, the solver treats P1 as an initial guess and iterates until the outlet pressure target is met.
+        </p>
+
+        <details class="advanced">
+          <summary>Advanced Solver Inputs</summary>
+
+          <label>
+            <span>Nodes N</span>
+            <input id="nodeCount" name="nodeCount" type="number" min="20" max="400" step="1" value="100" required>
+          </label>
+
+          <label>
+            <span>Mass Flux G (kg/m^2/s)</span>
+            <input id="massFlux" name="massFlux" type="number" step="1" value="4058" required>
+          </label>
+
+          <label>
+            <span>Peak Volumetric Heat Q0 (W/m^3)</span>
+            <input id="heatGeneration" name="heatGeneration" type="number" step="1000000" value="200000000" required>
+          </label>
+
+          <label>
+            <span>Channel Length L (m)</span>
+            <input id="length" name="length" type="number" step="0.01" value="3.0" required>
+          </label>
+        </details>
+
+        <div class="button-row">
+          <button type="submit" class="primary">Run Simulation</button>
+          <button type="button" id="resetButton" class="secondary">Reset Defaults</button>
+        </div>
+
+        <button type="button" id="downloadButton" class="ghost">Download CSV</button>
+      </form>
+
+      <div class="note-card">
+        <h2>Model Note</h2>
+        <p>
+          This app now uses the exact property model ported from <code>STEAMTABLE.f90</code>, including
+          <code>DENSE</code>, <code>viscosity</code>, <code>therm</code>, and <code>thercon</code>.
+          If the steam-table routines hit an invalid state or fail to converge, the run stops and reports the exact solver location.
+        </p>
+      </div>
+    </aside>
+
+    <main class="dashboard">
+      <section class="status-strip">
+        <div>
+          <p class="eyebrow">Run Status</p>
+          <h2 id="statusTitle">Ready</h2>
+        </div>
+        <p id="statusMessage" class="status-message">
+          Enter values and run the reactor simulation.
+        </p>
+      </section>
+
+      <section id="summaryCards" class="summary-grid"></section>
+
+      <section class="chart-grid">
+        <article class="chart-card">
+          <div class="chart-header">
+            <h3>Pressure Profile</h3>
+            <p>P(z) along the channel</p>
+          </div>
+          <div id="pressureChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card wide">
+          <div class="chart-header">
+            <h3>Temperature Stack</h3>
+            <p>Fluid and solid temperatures from inlet to outlet</p>
+          </div>
+          <div id="temperatureChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-header">
+            <h3>Heat Generation</h3>
+            <p>Volumetric source term</p>
+          </div>
+          <div id="heatChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-header">
+            <h3>Heat Transfer Coefficient</h3>
+            <p>Convective response along the channel</p>
+          </div>
+          <div id="htcChart" class="chart"></div>
+        </article>
+      </section>
+
+      <section class="table-card">
+        <div class="chart-header">
+          <h3>Node Results</h3>
+          <p>Scrollable exportable table of the full solution</p>
+        </div>
+        <div class="table-wrap">
+          <table id="resultsTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
