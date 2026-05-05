@@ -6,7 +6,7 @@ This project presents a web-based version of a single-channel reactor thermal-hy
 
 ## Live Demo
 
-Live demo link will be added after deployment.
+[Live demo link will be added after deployment.](https://hammadali-nuclearlab.github.io/Reactor-Channel-Thermal-Hydraulic-App/)
 
 ## Project Purpose
 
