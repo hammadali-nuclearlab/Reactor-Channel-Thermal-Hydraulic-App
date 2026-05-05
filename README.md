@@ -6,7 +6,7 @@ This project presents a web-based version of a single-channel reactor thermal-hy
 
 ## Live Demo
 
-[Open Live Demo](https://reactor-channel-thermal-hydraulic-app.vercel.app)
+[Open Live Demo](https://reactor-channel-thermal-hydraulic-a.vercel.app/)
 
 ## Project Purpose
 
