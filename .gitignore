@@ -1,0 +1,19 @@
+# Windows/macOS system files
+Thumbs.db
+.DS_Store
+
+# Editor folders
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Fortran build files
+*.o
+*.obj
+*.mod
+*.exe
+*.out
